@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Javasript exercise</title>
+</head>
+<body>
+<p>original:</p>
+<p id="origin">...</p>
+<p>result:</p>
+<p id="result">...</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<script type="text/javascript">
+    //arr = [-1, 1, 2, 3, 4];
+    arr = new Array();
+    key = -1;
+    r = document.getElementById('result');
+
+    function bSearch(a, key, low, high) {
+        if (a.length < 1)
+            return -1;
+
+        while (low <= high) {
+            var mid = Math.floor((low + high) / 2);
+            console.log('mid', mid);
+            console.log('mid val', a[mid]);
+            if (a[mid] == key)
+                return mid;
+            else if (a[mid] < key)
+                low = mid + 1;
+            else
+                high = mid - 1;
+        }
+        return -1;
+    }
+
+    function myFunction() {
+        document.getElementById('origin').innerHTML = arr + ': searching ' + key;
+        r.innerHTML = bSearch(arr, key, 0, arr.length);
+    }
+</script>
+
+</body>
+</html>
+
