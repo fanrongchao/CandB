@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Javasript exercise</title>
+</head>
+<body>
+<p>original:</p>
+<p id="origin">...</p>
+<p>result:</p>
+<p id="result">...</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<script type="text/javascript">
+    r = document.getElementById('result');
+//    arr = ['a', 'b', 'c', 'd', 'a', 'e'];
+    arr = 'I miss you!';
+    
+    /* reverse a string. covert it to array and join the returned array */
+    function reverse_str(s) {
+        return reverse(s.split('')).join('');
+    }
+
+    /* reverse a list 
+       seems that js string cannot alter a single char either, as python...
+     */
+    function reverse(l) {
+        if (l.length < 2)
+            return l;
+
+        var i, j;
+        for (i = 0, j = l.length - 1; i < j; i++, j--) {
+            if (l[i] != l[j]) {
+                console.log('before swap ' + l[i] + ' ' + l[j] );
+                /* a bit creepy. just want to learn how to pass by
+                   reference, but still not simple. any way to make it
+                   fewer lines? */
+                var tmp = {x: l[i], y: l[j]};
+                swap(tmp);
+                l[i] = tmp.x, l[j] = tmp.y;
+                console.log('after swap ' + l[i] + ' ' + l[j] );
+            }
+        }
+        return l;
+    }
+
+    function swap(a) {
+        if (a.x != a.y) {
+            var t = a.x;
+            a.x = a.y;
+            a.y = t;
+        }
+    }
+
+    function myFunction() {
+        document.getElementById('origin').innerHTML = arr;
+        r.innerHTML = reverse_str(arr); 
+    }
+</script>
+
+</body>
+</html>
+
