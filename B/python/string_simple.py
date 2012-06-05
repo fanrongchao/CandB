@@ -1,4 +1,5 @@
 # simple string manipulation 
+# most from CareerCup Ch1
 
 import sys
 import os
