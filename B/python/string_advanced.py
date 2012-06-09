@@ -39,13 +39,14 @@ def bi_add(s1, s2):
 
 # reverse polish notation, from my LinkedIn interview
 # take a string as input, return computed result as float number
-# next: use space to identify numbers...
+# delimiter: space (may consecutive)
+# eg. input 5 10 + 3 * -> (5+10)*3
 def reverse_polish(s):
     if len(s) < 1:
         raise ValueError('invalid argument: zero-length string')
 
-    # stack
-    stack = list()
+    stack = list() # stack stores previous numbers
+    number = list() # store a number
     try:
         for ch in s:
             if ch == '+':
@@ -58,8 +59,14 @@ def reverse_polish(s):
             elif ch == '/':
                 t = stack.pop()
                 stack.append(stack.pop() / t)
+            elif ch == ' ':
+                if len(number) > 0:
+                    stack.append(float(''.join(number))) # may ValueError
+                    number[:] = []
+                else:
+                    continue
             else: # numbers
-                stack.append(float(ch)) # may ValueError
+                number.append(ch)
         return stack.pop()
 
     except IndexError as e:
@@ -96,11 +103,11 @@ def main():
     test(bi_add('1010','1010'), '10100')
     
     print '**** test reverse polish notation (RPN) ****'
-    test(reverse_polish('512+3/+9-'), -3.0)
+    test(reverse_polish(' 5   10  + 3 * 15  - '), 30.0)
     # exceptions
-    reverse_polish('2+40/')
-    reverse_polish('21+s0/')
-    reverse_polish('21+0/')
+    reverse_polish('2 s  + 4 0 /')
+    reverse_polish('21 + s 0 /')
+    reverse_polish('2 1 + 0 /')
 
 if __name__ == '__main__':
     main()
