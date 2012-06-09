@@ -102,7 +102,6 @@ def replace_space(s):
 def my_replace(s, old, new):
     indices = set([i.start() for i in re.finditer(old, s)]) # the complexity...
     if len(indices) == 0:
-        print 'no old in the string'
         return s # no occurence
     
     result = list()
@@ -119,8 +118,49 @@ def my_replace(s, old, new):
     return ''.join(result)
 
 
-# remove duplicate chars in a string without extra space
-#def remove_dup(s):
+# remove duplicate chars in a string
+def remove_dup(s, extra):
+    if len(s) < 2:
+        return s
+
+    print s
+    l = list(s)
+    # with extra space (hashSet), O(n)
+    if extra:
+        charset = Set()
+        charset.add(l[0]) 
+        remove = 1
+        for i in range(1, len(l)): 
+            if l[i] not in charset:
+                charset.add(l[i])
+                l[remove] = l[i]
+                remove += 1
+        # end iteration, only keep chars before 'remove'
+        i = len(l) - 1
+        while i >= remove:
+            l.pop()
+            i -= 1
+    # no extra space, O(n^2)
+    else:
+        remove = 1
+        for cur in range(1, len(l)): 
+            i = 0
+            while i < remove:
+            #for i in range(0, remove):
+                if l[i] == l[cur]:
+                    break
+                i += 1
+            if i == remove:
+                if remove != cur:
+                    l[remove] = l[cur]
+                remove += 1
+            # end iteration, only keep chars before 'remove'
+        i = len(l) - 1
+        while i >= remove:
+            l.pop()
+            i -= 1
+
+    return ''.join(l)
 
 
 # check if s2 is a rotation of s1 using is_substring
@@ -134,15 +174,45 @@ def is_rotation(s1, s2):
     return is_substring(s1 + s1, s2)
 
 
+# binary add function, my facebook interview...
+# return a string in binary format
+def bi_add(s1, s2):
+    s1 = list(s1)
+    s2 = list(s2)
+    len1 = len(s1)
+    len2 = len(s2)
+    if len1 < 1 or len2 < 1:
+        raise ValueError('invalid argument: zero-length string')
+
+    # covert to list, pad to same length
+    if len1 > len2:
+        s2 = list('0') * (len1 - len2) + s2
+    else:
+        s1 = list('0') * (len2 - len1) + s1
+    r = list()
+    carry = 0
+    for i in reversed(range(0, len(s1))):
+        tmp = (int(s1[i]) + int(s2[i]) + carry)
+        if tmp > 1:
+            carry = 1
+            r.append(0 if tmp == 2 else 1)
+        else:
+            carry = 0
+            r.append(tmp)
+    if carry == 1:
+        r.append(1)
+
+    return ''.join(map(str,list(reversed(r)))) 
+
+
 # Simple provided test() function used in main() to print
 # what each function returns vs. what it's supposed to return.
 def test(got, expected):
       if got == expected:
-          prefix = ' OK '
+          print 'OK got: %s' % repr(got)
       else:
           prefix = '  X '
-
-      print '%s got: %s expected: %s' % (prefix, repr(got), repr(expected))
+          print '%s got: %s expected: %s' % (prefix, repr(got), repr(expected))
 
 
 def main():
@@ -159,20 +229,32 @@ def main():
 
     # string...
     cases = [
-            'abcdwsef',
+            'abccdwsef',
             'h hh',
             'I love rongchao, hope rongchao love me too @_@'
             ]
     for c in cases:
+        print '*****test reverse string'
         test(reverse_str(c), c[::-1])
+        print '*****test is char unique'
         test(is_chars_unique(c, False), False)
+        print '*****test replace space in string'
         test(replace_space(c), c.replace(' ', '%20'))
+        print '*****test replace(old, new)'
         test(my_replace(c, 'rongchao', 'Danielle'), 
                 c.replace('rongchao', 'Danielle'))
 
+    print '*****test if 2 strings anagrams'
     test(is_anagrams('abeed23', 'e2aeb3d'), True)
+    print '*****test s1 is s2 rotation' 
     test(is_rotation('waterbottle', 'erbottlewat'), True)
     test(is_rotation('ri', 'i'), False)
+    print '*****test remove duplicate chars in a string'
+    test(remove_dup('abeed223', True), 'abed23')
+    test(remove_dup('abeed223', False), 'abed23')
+    print '*****test binary add by string'
+    test(bi_add('11111','1'), '100000')
+    test(bi_add('1010','1010'), '10100')
 
 if __name__ == '__main__':
     main()
